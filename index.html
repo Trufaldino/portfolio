@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Антон Рядинский — Python Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --accent: #58a6ff;
+    --accent2: #1f6feb;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --border: #30363d;
+    --green: #3fb950;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .logo { font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+  .logo span { color: var(--accent); }
+
+  nav { display: flex; gap: 1.5rem; }
+  nav a {
+    color: var(--text2); text-decoration: none; font-size: 0.9rem;
+    transition: color .2s; font-weight: 500;
+  }
+  nav a:hover, nav a.active { color: var(--accent); }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); border-radius: 2px; transition: .3s; }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 60px; left: 0; right: 0;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem; flex-direction: column; gap: 1rem; z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--text2); text-decoration: none; font-size: 1rem; font-weight: 500; padding: .5rem 0; }
+
+  /* SECTIONS */
+  section { padding: 5rem 1.5rem; max-width: 900px; margin: 0 auto; }
+
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding-top: 80px; max-width: 900px; margin: 0 auto;
+  }
+
+  .hero-inner { width: 100%; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.3);
+    color: var(--accent); padding: .3rem .8rem; border-radius: 20px;
+    font-size: .8rem; font-weight: 600; margin-bottom: 1.5rem;
+  }
+  .hero-badge::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .4; }
+  }
+
+  h1 { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: .5rem; }
+  h1 span { color: var(--accent); }
+
+  .hero-sub { font-size: clamp(1rem, 2.5vw, 1.25rem); color: var(--text2); margin-bottom: 2rem; }
+
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .65rem 1.4rem; border-radius: 8px; font-size: .95rem;
+    font-weight: 600; text-decoration: none; transition: all .2s; cursor: pointer; border: none;
+  }
+  .btn-primary { background: var(--accent); color: #0d1117; }
+  .btn-primary:hover { background: #79c0ff; transform: translateY(-2px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ABOUT */
+  .about-text { color: var(--text2); font-size: 1rem; line-height: 1.8; max-width: 700px; }
+  .about-text p + p { margin-top: 1rem; }
+
+  /* SKILLS */
+  .skills-grid { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .skill-group { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+  .skill-label {
+    font-size: .75rem; font-weight: 600; color: var(--text2);
+    text-transform: uppercase; letter-spacing: .05em;
+    min-width: 120px;
+  }
+
+  .tag {
+    display: inline-block; padding: .25rem .7rem;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 6px; font-size: .8rem; color: var(--text2);
+    transition: all .2s;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag.accent { background: rgba(88,166,255,.1); border-color: rgba(88,166,255,.4); color: var(--accent); }
+
+  /* TIMELINE */
+  .timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--border);
+  }
+
+  .tl-item { padding-left: 2.5rem; padding-bottom: 2.5rem; position: relative; }
+  .tl-item:last-child { padding-bottom: 0; }
+
+  .tl-dot {
+    position: absolute; left: 0; top: 6px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent);
+    z-index: 1;
+  }
+  .tl-item:first-child .tl-dot { background: var(--accent); }
+
+  .tl-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .25rem; margin-bottom: .25rem; }
+  .tl-company { font-weight: 700; font-size: 1.05rem; }
+  .tl-date { font-size: .8rem; color: var(--text2); align-self: center; }
+  .tl-role { font-size: .9rem; color: var(--accent); margin-bottom: .5rem; font-weight: 500; }
+  .tl-desc { font-size: .88rem; color: var(--text2); margin-bottom: .6rem; }
+  .tl-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .project-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.4rem;
+    transition: all .25s; display: flex; flex-direction: column;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 8px 32px rgba(88,166,255,.08); }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+    border-color: rgba(88,166,255,.4);
+    background: linear-gradient(135deg, rgba(88,166,255,.05) 0%, var(--bg2) 100%);
+  }
+
+  .project-icon { font-size: 2rem; margin-bottom: .75rem; }
+  .project-title { font-weight: 700; font-size: 1.1rem; margin-bottom: .5rem; }
+  .project-desc { font-size: .87rem; color: var(--text2); flex: 1; margin-bottom: 1rem; line-height: 1.6; }
+  .project-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+  .project-link {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: .82rem; color: var(--accent); text-decoration: none;
+    font-weight: 600; transition: opacity .2s;
+  }
+  .project-link:hover { opacity: .8; }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+
+  .contact-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+    text-decoration: none; color: var(--text);
+    display: flex; align-items: center; gap: 1rem;
+    transition: all .2s;
+  }
+  .contact-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+  .contact-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .contact-label { font-size: .75rem; color: var(--text2); margin-bottom: .2rem; }
+  .contact-value { font-size: .9rem; font-weight: 600; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 2rem 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text2); font-size: .85rem;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    nav { display: none; }
+    .hamburger { display: flex; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: 1; }
+    section { padding: 4rem 1.25rem; }
+    .skill-label { min-width: 100%; }
+    .tl-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#hero" class="logo">AR<span>.</span></a>
+  <nav id="nav">
+    <a href="#about">О себе</a>
+    <a href="#skills">Навыки</a>
+    <a href="#experience">Опыт</a>
+    <a href="#projects">Проекты</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" class="mm-link">О себе</a>
+  <a href="#skills" class="mm-link">Навыки</a>
+  <a href="#experience" class="mm-link">Опыт</a>
+  <a href="#projects" class="mm-link">Проекты</a>
+  <a href="#contact" class="mm-link">Контакты</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner fade-in">
+    <div class="hero-badge">Открыт к предложениям</div>
+    <h1>Антон<br><span>Рядинский</span></h1>
+    <p class="hero-sub">Python Developer · Middle+ · 4+ года опыта · Москва</p>
+    <div class="hero-btns">
+      <a href="https://t.me/hahHEHEH" target="_blank" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.26 13.955l-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.46c.537-.194 1.006.131.89.603z"/></svg>
+        Написать
+      </a>
+      <a href="https://github.com/Trufaldino" target="_blank" class="btn btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-title fade-in">О себе</h2>
+  <div class="about-text fade-in">
+    <p>Привет! Я Middle+ Python-разработчик с 4+ годами коммерческого опыта. Начинал с full-stack разработки на Django, прошёл через автоматизацию банковских процессов в ПСБ и HONOR, а сейчас занимаюсь развитием систем мониторинга highload инфраструктуры в Альфа-Банке.</p>
+    <p>Работаю с ClickHouse, Airflow, ELK, OpenTelemetry и Zabbix — строю наблюдаемость над системами процессинга. Умею в бэкенд, автоматизацию и DevOps. Владею английским на уровне C2, немецким — B2.</p>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <h2 class="section-title fade-in">Навыки</h2>
+  <div class="skills-grid fade-in">
+    <div class="skill-group">
+      <span class="skill-label">Backend</span>
+      <span class="tag accent">Python</span>
+      <span class="tag">Django</span>
+      <span class="tag">DRF</span>
+      <span class="tag">Flask</span>
+      <span class="tag">FastAPI</span>
+      <span class="tag">Celery</span>
+      <span class="tag">RabbitMQ</span>
+      <span class="tag">REST API</span>
+    </div>
+    <div class="skill-group">
+      <span class="skill-label">Data & Monitoring</span>
+      <span class="tag accent">ClickHouse</span>
+      <span class="tag accent">Airflow</span>
+      <span class="tag accent">ELK Stack</span>
+      <span class="tag accent">OpenTelemetry</span>
+      <span class="tag accent">Zabbix</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">SQLAlchemy</span>
+    </div>
+    <div class="skill-group">
+      <span class="skill-label">Databases</span>
+      <span class="tag">PostgreSQL</span>
+      <span class="tag">MySQL</span>
+      <span class="tag">SQLite</span>
+      <span class="tag">Raw SQL</span>
+    </div>
+    <div class="skill-group">
+      <span class="skill-label">DevOps</span>
+      <span class="tag">Docker</span>
+      <span class="tag">Docker Compose</span>
+      <span class="tag">Linux</span>
+      <span class="tag">Nginx</span>
+      <span class="tag">Git</span>
+      <span class="tag">Bash</span>
+    </div>
+    <div class="skill-group">
+      <span class="skill-label">Automation</span>
+      <span class="tag">Selenium</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">SOAP/REST</span>
+    </div>
+    <div class="skill-group">
+      <span class="skill-label">Frontend</span>
+      <span class="tag">HTML</span>
+      <span class="tag">CSS</span>
+      <span class="tag">JavaScript</span>
+      <span class="tag">Bootstrap</span>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <h2 class="section-title fade-in">Опыт работы</h2>
+  <div class="timeline fade-in">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-header">
+        <span class="tl-company">Альфа-Банк</span>
+        <span class="tl-date">Июнь 2025 — наст. время</span>
+      </div>
+      <div class="tl-role">Ведущий эксперт по развитию систем мониторинга</div>
+      <div class="tl-desc">Развитие систем мониторинга в Дирекции разработки и тестирования систем процессинга. Работа с highload банковской инфраструктурой, построение наблюдаемости и алертинга.</div>
+      <div class="tl-tags">
+        <span class="tag accent">ClickHouse</span>
+        <span class="tag accent">Airflow</span>
+        <span class="tag accent">Zabbix</span>
+        <span class="tag accent">OpenTelemetry</span>
+        <span class="tag accent">ELK</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-header">
+        <span class="tl-company">HONOR</span>
+        <span class="tl-date">Апрель 2024 — Май 2025</span>
+      </div>
+      <div class="tl-role">Старший инженер-программист</div>
+      <div class="tl-desc">Автоматизация бизнес-процессов, парсинг данных (API, FTP, web, email), работа с витринами данных. Наставничество и ревью кода. Кастомные китайские технологии и решения.</div>
+      <div class="tl-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Django</span>
+        <span class="tag">Selenium</span>
+        <span class="tag">Pandas</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-header">
+        <span class="tl-company">Промсвязьбанк</span>
+        <span class="tl-date">Декабрь 2023 — Март 2024</span>
+      </div>
+      <div class="tl-role">Старший инженер-программист</div>
+      <div class="tl-desc">Автоматизация банковских процессов на Python, работа с высоконагруженной БД, очереди данных, построение BPMN-моделей, поддержка legacy-кода.</div>
+      <div class="tl-tags">
+        <span class="tag">Python</span>
+        <span class="tag">SQLAlchemy</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">RabbitMQ</span>
+        <span class="tag">Selenium</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-header">
+        <span class="tl-company">Автономные робототехнические системы</span>
+        <span class="tl-date">Февраль 2022 — Ноябрь 2023</span>
+      </div>
+      <div class="tl-role">Инженер-программист</div>
+      <div class="tl-desc">Full-stack разработка на Django/Flask, микросервисная архитектура, кабинет владельца, работа с нагруженными БД, парсинг с FTP.</div>
+      <div class="tl-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Django</span>
+        <span class="tag">Flask</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <h2 class="section-title fade-in">Проекты</h2>
+  <div class="projects-grid fade-in">
+
+    <div class="project-card featured">
+      <div class="project-icon">🎮</div>
+      <div class="project-title">Quiplash Bot</div>
+      <div class="project-desc">
+        Telegram-бот для игры в стиле Quiplash — соревнование в остроумии. Поддерживает 3–10 игроков, 3 раунда разных форматов, лобби по 6-значному коду, анонимное голосование и систему очков (1000 за голос, +2000 бонус за единогласное голосование).
+      </div>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="tag accent">Python</span>
+          <span class="tag">aiogram</span>
+          <span class="tag">SQLite</span>
+          <span class="tag">Telegram Bot</span>
+        </div>
+        <a href="https://github.com/Trufaldino/fun_quiz_bot" target="_blank" class="project-link">
+          GitHub →
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">🍽️</div>
+      <div class="project-title">Foodgram</div>
+      <div class="project-desc">Платформа для публикации рецептов. Подписки на авторов, избранное, список покупок с экспортом ингредиентов.</div>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="tag">Django</span>
+          <span class="tag">DRF</span>
+          <span class="tag">Docker</span>
+        </div>
+        <a href="https://github.com/Trufaldino/foodgram-project-react" target="_blank" class="project-link">GitHub →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">✍️</div>
+      <div class="project-title">Yatube</div>
+      <div class="project-desc">Социальная сеть блогеров — посты, группы, подписки, комментарии. Покрыта тестами, развёрнута на Яндекс.Облако.</div>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="tag">Django</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">pytest</span>
+        </div>
+        <a href="https://github.com/Trufaldino/hw05_final" target="_blank" class="project-link">GitHub →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">⚙️</div>
+      <div class="project-title">Service Info</div>
+      <div class="project-desc">Веб-интерфейс для управления системными сервисами Ubuntu — мониторинг, запуск и остановка прямо из браузера.</div>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Flask</span>
+          <span class="tag">Linux</span>
+        </div>
+        <a href="https://github.com/Trufaldino/service-info" target="_blank" class="project-link">GitHub →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2 class="section-title fade-in">Контакты</h2>
+  <div class="contact-grid fade-in">
+    <a href="https://t.me/hahHEHEH" target="_blank" class="contact-card">
+      <span class="contact-icon">✈️</span>
+      <div>
+        <div class="contact-label">Telegram</div>
+        <div class="contact-value">@hahHEHEH</div>
+      </div>
+    </a>
+    <a href="mailto:anton.ryadinski@gmail.com" class="contact-card">
+      <span class="contact-icon">📧</span>
+      <div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value">anton.ryadinski@gmail.com</div>
+      </div>
+    </a>
+    <a href="https://github.com/Trufaldino" target="_blank" class="contact-card">
+      <span class="contact-icon">💻</span>
+      <div>
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">github.com/Trufaldino</div>
+      </div>
+    </a>
+    <a href="tel:+79192209912" class="contact-card">
+      <span class="contact-icon">📱</span>
+      <div>
+        <div class="contact-label">Телефон</div>
+        <div class="contact-value">+7 (919) 220-99-12</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Антон Рядинский · Made with ☕ and Python</p>
+</footer>
+
+<script>
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  document.querySelectorAll('.mm-link').forEach(l => l.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#nav a');
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`#nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => spy.observe(s));
+</script>
+</body>
+</html>
